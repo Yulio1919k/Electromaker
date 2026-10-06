@@ -1,0 +1,85 @@
+{% extends 'base.html' %}{% load ui %}
+{% block title %}{{ title }} - Electromaker.io{% endblock %}
+
+{% block content %}
+<div class="ticker">
+  Arduino Ventuno Q, Nordic AI and More from Em...
+  <a href="https://www.youtube.com/channel/UCiMO2NHYWNiVTzyGsPYn4DA" target="_blank" rel="noopener">Watch now on YouTube</a>
+</div>
+
+<form method="get">
+  <div class="sbar">
+    <input type="search" name="q" value="{{ q }}" placeholder="Search {{ label }}...">
+  </div>
+
+  <div class="wrap">
+    <div class="filters">
+      {% for f in filters %}
+      <div>
+        <label>{{ f.label }}</label>
+        <select name="{{ f.name }}" onchange="this.form.submit()">
+          <option value="">All</option>
+          {% for o in f.options %}
+          <option value="{{ o }}"{% if o == f.value %} selected{% endif %}>{{ o }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endfor %}
+
+      {% if upload %}
+      <a class="join" href="{% if user.is_authenticated %}#{% else %}{% url 'login' %}{% endif %}">Upload your projects</a>
+      {% endif %}
+    </div>
+  </div>
+</form>
+
+<div class="wrap">
+  {% if page.paginator.num_pages > 1 %}
+  <div class="pager">
+    {% if page.has_previous %}
+    <a href="?{{ rest }}&page={{ page.previous_page_number }}">&lsaquo;</a>
+    {% endif %}
+
+    {% for p in pages %}
+      {% if p == page.number %}
+      <span class="cur">{{ p }}</span>
+      {% elif p == '…' %}
+      <span>…</span>
+      {% else %}
+      <a href="?{{ rest }}&page={{ p }}">{{ p }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if page.has_next %}
+    <a href="?{{ rest }}&page={{ page.next_page_number }}">&rsaquo;</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="cards">
+    {% for item in page %}
+    <article class="em-card">
+      {% if item.image_url %}
+      <img src="{{ item.image_url }}" alt="">
+      {% else %}
+      <img
+        src="{% if item.kind %}{% url 'thumb' 'post' item.pk %}{% else %}{% url 'thumb' 'project' item.pk %}{% endif %}"
+        alt="{{ item.title }}">
+      {% endif %}
+
+      <h3>{{ item.title }}</h3>
+      <p>{{ item.summary|truncatechars:110 }}</p>
+
+      <div class="by">
+        <div>By <span>{{ item.author }}</span></div>
+        <em class="em-badge b-{{ item.badge|lower }}">{{ item.badge }}</em>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  {% if not page %}
+  <p class="empty">No results found.</p>
+  {% endif %}
+</div>
+{% endblock %}

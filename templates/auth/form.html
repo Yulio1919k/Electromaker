@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - Electromaker.io{% endblock %}
+{% block content %}
+<section class="authbox">
+<h1>{{ title }}</h1>
+<form method="post" novalidate>{% csrf_token %}
+{{ form.non_field_errors }}
+{% for field in form %}
+<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+<div{% if field.name == 'newsletter' %} class="opts"{% endif %}>{{ field }}</div>
+{{ field.errors }}
+{% endfor %}
+{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+<button class="join" type="submit">{{ button }}</button>
+</form>
+<p class="alt">{{ alt|safe }}</p>
+</section>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}{% load ui %}
+{% block content %}
+<section class="headline"><h1>Much more than a component shop we're a<br><strong>Maker Community</strong></h1></section>
+<section class="categories" id="categories"><div class="arrow">‹</div><div class="category"><div class="catpic"><div class="dial"></div></div>Adafruit accessories</div><div class="category"><div class="catpic"><div class="buttonsicon"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>Sparkfun Accessories</div><div class="category"><div class="catpic"><div class="board"></div></div>Raspberry Pi Accessories</div><div class="category"><div class="catpic"><div class="knob"></div></div>DFRobot Accessories</div><div class="category"><div class="catpic"><div class="rpi"></div></div>Single Board Computers</div><div class="category"><div class="catpic"><div class="board" style="width:82px;height:48px"></div></div>Embedded Box Computers</div></section>
+<section class="banner"><div class="em-small">Product of the Week</div><h2>Nordic nRF54L15 Tag: Sensors, Setup, and Channel Sounding</h2><p>The board supports Bluetooth Low Energy, Bluetooth Mesh, Thread, and more for connected maker projects.</p><div class="chip"></div></section>
+<section class="lower" id="projects"><div class="sectiontitle">Featured projects and maker content</div><div class="cards"><article class="em-card"><h3>Build with Arduino</h3><p>Explore practical electronics projects, guides and community builds.</p></article><article class="em-card"><h3>Raspberry Pi projects</h3><p>Single-board computer projects for makers, students and developers.</p></article><article class="em-card"><h3>Latest videos</h3><p>Discover tutorials, reviews and hands-on maker technology.</p></article></div></section>
+
+{% if platforms %}
+<section class="hsec">
+  <h2>Featured platforms</h2>
+  <div class="plist">
+    {% for p in platforms %}
+    <a href="{% url 'projects' %}?platform={{ p.name|urlencode }}">
+      <img class="ph" src="{% url 'thumb' 'platform' p.pk %}" alt="{{ p.name }}">
+      {{ p.name }}
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if projects %}
+<section class="hsec">
+  <h2>Latest projects</h2>
+  <div class="cards">
+    {% for x in projects %}
+    <article class="em-card">
+      <img
+        src="{% if x.kind %}{% url 'thumb' 'post' x.pk %}{% else %}{% url 'thumb' 'project' x.pk %}{% endif %}"
+        alt="{{ x.title }}">
+      <h3>{{ x.title }}</h3>
+      <p>{{ x.summary|truncatechars:110 }}</p>
+      <div class="by">
+        <div>By <span>{{ x.author }}</span></div>
+        <em class="em-badge b-{{ x.badge|lower }}">{{ x.badge }}</em>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if posts %}
+<section class="hsec">
+  <h2>From the blog</h2>
+  <div class="cards">
+    {% for x in posts %}
+    <article class="em-card">
+      <img
+        src="{% if x.kind %}{% url 'thumb' 'post' x.pk %}{% else %}{% url 'thumb' 'project' x.pk %}{% endif %}"
+        alt="{{ x.title }}">
+      <h3>{{ x.title }}</h3>
+      <p>{{ x.summary|truncatechars:110 }}</p>
+      <div class="by">
+        <div>By <span>{{ x.author }}</span></div>
+        <em class="em-badge b-{{ x.badge|lower }}">{{ x.badge }}</em>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="hsec" id="faqs">
+  <h2>FAQs</h2>
+  <details>
+    <summary>How fast do you ship?</summary>
+    <p>Most in-stock components ship the same day if the order is placed before the daily cut-off.</p>
+  </details>
+  <details>
+    <summary>Which payment methods are accepted?</summary>
+    <p>Major credit and debit cards and PayPal are accepted at checkout.</p>
+  </details>
+  <details>
+    <summary>Can I return a component?</summary>
+    <p>Unused items in their original packaging can be returned within 30 days of delivery.</p>
+  </details>
+  <details>
+    <summary>How do I upload my own project?</summary>
+    <p>Create a free account, open the Project Hub and press “Upload your projects”.</p>
+  </details>
+  <details>
+    <summary>Do I need an account to browse?</summary>
+    <p>No. You only need one to upload projects, save favourites and place orders.</p>
+  </details>
+</section>
+
+<section class="hsec" id="support">
+  <h2>Help &amp; Support</h2>
+  <div class="sup">
+    <div>
+      <p style="font-size:13px;line-height:1.6;color:#555">
+        Need a hand with an order or a part number? Send us a message and we will reply within one working day.<br><br>
+        <b>Email:</b> support@example.com<br>
+        <b>Hours:</b> Mon–Fri, 9:00–17:00
+      </p>
+    </div>
+    <form onsubmit="event.preventDefault();this.innerHTML='<p><b>Thanks!</b> Your message has been received.</p>'">
+      <input placeholder="Your name" required>
+      <input type="email" placeholder="Email address" required>
+      <textarea rows="3" placeholder="How can we help?" required></textarea>
+      <button class="em-btn" type="submit">Send message</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

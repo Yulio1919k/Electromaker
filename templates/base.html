@@ -1,0 +1,471 @@
+<!doctype html>
+{% load static %}
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Electromaker.io - Unleash Your Creativity with DIY Electronics &amp; Maker Projects{% endblock %}</title>
+
+  <!-- Bootstrap 5.3.8 (local) -->
+  <link rel="stylesheet" href="{% static 'core/css/bootstrap.min.css' %}">
+
+  <style>
+    /* ==========================================================
+       0. COMPATIBILIDAD CON BOOTSTRAP (reboot)
+       Restaura el aspecto original que Bootstrap cambia por defecto
+       ========================================================== */
+    body { font-family: "Trebuchet MS", Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: normal; }
+    h1, h2, h3, h4, h5, h6 { font-weight: 700; line-height: normal; }
+    p { margin: 1em 0; }
+    label { display: inline; }
+    img, svg { vertical-align: baseline; }
+    button, input, select, textarea { font: revert; }
+
+    /* ==========================================================
+       1. BASE, LAYOUT Y HOME
+       ========================================================== */
+    :root { font-family: "Trebuchet MS", Arial, sans-serif; --navy: #10365d; --green: #18be80; --text: #183b61; --muted: #555; --line: #222; --bg: #fff; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--text); }
+    #app { min-height: 100vh; background: #fff; }
+    a { text-decoration: none; color: inherit; }
+
+    /* Barra superior */
+    .top { height: 30px; background: #18bd7f; color: #063b2b; font-size: 12px; padding: 7px 16px; text-align: center; }
+
+    /* Navegación principal */
+    .em-nav { height: 50px; background: #10365d; color: #fff; display: flex; align-items: center; padding: 0 max(24px, calc((100% - 830px) / 2)); gap: 30px; }
+    .logo { font-weight: 700; font-size: 18px; letter-spacing: -1px; white-space: nowrap; margin-right: auto; }
+    .logo:before { content: "⌁"; font-size: 25px; margin-right: 3px; }
+    .logo span { color: #18be80; font-weight: 400; }
+    .links { display: flex; gap: 26px; align-items: center; }
+    .links a { font-size: 12px; font-weight: 700; color: #fff; }
+    .login { margin-left: auto; font-size: 12px; font-weight: 700; padding: 8px 10px; border-radius: 2px; transition: .2s; }
+    .login:hover { background: rgba(255,255,255,.12); color: #18be80; }
+    .join { background: #18be80; color: #fff; padding: 9px 20px; font-weight: 700; font-size: 12px; border: 1px solid #18be80; border-radius: 0; transition: .2s; }
+    .join:hover { background: #13a96f; border-color: #13a96f; }
+    .cart { font-size: 21px; padding: 4px 6px; cursor: pointer; transition: .2s; }
+    .cart:hover { transform: scale(1.08); }
+
+    /* Subnavegación y buscador */
+    .subnav { max-width: 850px; margin: auto; }
+    .subtop { height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 25px; }
+    .sublinks { display: flex; gap: 25px; color: #4b4b4b; font-size: 12px; }
+    .sublinks a { padding: 8px 0; transition: .2s; }
+    .sublinks a:hover { color: #10365d; }
+    .search { width: 330px; height: 31px; border: 1px solid #183b61; border-radius: 18px; padding: 0 42px 0 16px; background: #fff; font-size: 11px; }
+    .searchwrap { position: relative; }
+    .searchwrap:after { content: "⌕"; position: absolute; right: 12px; top: 2px; font-size: 25px; color: #333; }
+
+    /* Marcas */
+    .brands { height: 65px; border-bottom: 1px solid #222; display: flex; align-items: center; justify-content: space-between; gap: 18px; overflow: hidden; }
+    .brand { flex: 1 1 0; min-width: 80px; display: flex; align-items: center; justify-content: center; }
+    .brand img { display: block; width: auto; height: auto; max-width: 100%; max-height: 34px; }
+
+    /* Contenido principal */
+    .main { max-width: 850px; margin: auto; }
+    .headline { padding: 40px 2px 22px; }
+    .headline h1 { font-weight: 300; font-size: 42px; line-height: 1.25; margin: 0; color: #163d64; letter-spacing: -1px; }
+    .headline strong { font-weight: 700; }
+
+    /* Categorías */
+    .categories { display: flex; align-items: center; gap: 27px; height: 190px; position: relative; }
+    .arrow { font-size: 43px; font-weight: 200; color: #4a4a4a; }
+    .category { width: 105px; text-align: center; flex: 0 0 105px; color: #555; font-size: 12px; }
+    .catpic { height: 105px; display: flex; align-items: center; justify-content: center; }
+    .board { width: 70px; height: 48px; border: 2px solid #5d8d63; border-radius: 5px; background: linear-gradient(135deg, #a8d89c, #d8e9d2); position: relative; }
+    .board:before, .board:after { content: ""; position: absolute; border-radius: 50%; background: #222; width: 9px; height: 9px; top: 9px; }
+    .board:before { left: 9px; }
+    .board:after { right: 9px; }
+    .knob { width: 55px; height: 55px; border-radius: 50%; background: #ffd900; border: 7px solid #e7bd00; box-shadow: 0 3px 4px #aaa; }
+    .buttonsicon { display: flex; gap: 5px; flex-wrap: wrap; width: 70px; justify-content: center; }
+    .buttonsicon i { width: 16px; height: 16px; border-radius: 50%; background: #f7c800; border: 1px solid #999; }
+    .buttonsicon i:nth-child(2), .buttonsicon i:nth-child(5) { background: #ef7048; }
+    .buttonsicon i:nth-child(3), .buttonsicon i:nth-child(6) { background: #222; }
+    .dial { width: 38px; height: 48px; border: 3px solid #888; border-radius: 10px; background: #eee; position: relative; }
+    .dial:after { content: ""; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #999; top: 9px; left: 10px; }
+    .rpi { width: 73px; height: 45px; border-radius: 3px; background: #43a65b; border: 2px solid #28733d; position: relative; }
+    .rpi:after { content: ""; position: absolute; right: -5px; top: 4px; width: 7px; height: 35px; background: #ddd; }
+
+    /* Banner */
+    .banner { margin-top: 7px; height: 230px; border-radius: 7px; overflow: hidden; background: radial-gradient(circle at 75% 55%, #0879b9 0, #061a2a 38%, #02080e 70%); color: #fff; padding: 30px; position: relative; }
+    .banner:after { content: ""; position: absolute; width: 340px; height: 120px; border: 5px solid rgba(35,176,235,.45); border-radius: 50%; right: -30px; bottom: -35px; transform: rotate(-15deg); }
+    .banner .em-small { font-size: 12px; font-weight: 700; margin-bottom: 18px; }
+    .banner h2 { font-size: 21px; line-height: 1.25; max-width: 440px; margin: 0 0 8px; }
+    .banner p { font-size: 13px; max-width: 470px; line-height: 1.5; }
+    .chip { position: absolute; right: 55px; bottom: 15px; width: 150px; height: 82px; border-radius: 50%; background: #dce5d7; border: 8px solid #6d9675; box-shadow: 0 0 0 4px #183c43; transform: rotate(-12deg); }
+    .chip:after { content: "nRF54L15"; position: absolute; right: 22px; top: 28px; color: #244b45; font-size: 12px; font-weight: 800; }
+
+    /* Secciones inferiores y tarjetas (primera definición) */
+    .lower { padding: 45px 0; }
+    .sectiontitle { font-size: 28px; font-weight: 300; color: #173e63; margin-bottom: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .em-card { border: 1px solid #ddd; padding: 18px; background: #fff; }
+    .em-card h3 { font-size: 17px; margin: 8px 0; }
+    .em-card p { font-size: 13px; color: #666; line-height: 1.5; }
+
+    /* Footer */
+    .footer { background: #10365d; color: #fff; margin-top: 35px; padding: 35px max(24px, calc((100% - 850px) / 2)); font-size: 12px; }
+
+    /* Responsive (base) */
+    @media (max-width: 900px) {
+      .em-nav { padding: 0 20px; }
+      .links { gap: 12px; }
+      .main, .subnav { width: calc(100% - 40px); }
+      .categories { overflow-x: auto; }
+      .brands { overflow-x: auto; }
+      .cards { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .links { display: none; }
+      .subtop { height: auto; padding: 15px 0; align-items: flex-start; flex-direction: column; }
+      .search { width: 100%; }
+      .headline h1 { font-size: 32px; }
+      .categories { gap: 14px; }
+      .cards { grid-template-columns: 1fr; }
+      .banner { height: 260px; }
+      .chip { right: -10px; }
+    }
+
+    /* ==========================================================
+       2. AUTENTICACIÓN, FOOTER, MENÚ DESPLEGABLE Y LISTADOS
+       ========================================================== */
+
+    /* Caja de login/registro */
+    .authbox { max-width: 420px; margin: 50px auto; padding: 0 4px; }
+    .authbox h1 { font-weight: 300; font-size: 30px; margin: 0 0 22px; letter-spacing: -1px; }
+    .authbox label { display: block; font-size: 12px; font-weight: 700; margin: 14px 0 5px; }
+    .authbox input[type=text], .authbox input[type=email], .authbox input[type=password] { width: 100%; height: 38px; border: 1px solid #183b61; border-radius: 3px; padding: 0 12px; font-size: 13px; }
+    .authbox .opts div { display: flex; gap: 18px; }
+    .authbox .opts label { display: inline; font-weight: 400; }
+    .authbox button.join { margin-top: 22px; width: 100%; height: 42px; cursor: pointer; }
+    .authbox .errorlist { list-style: none; margin: 4px 0 0; padding: 0; color: #c0392b; font-size: 12px; }
+    .authbox .alt { font-size: 12px; margin-top: 18px; }
+    .authbox .alt a { color: #13a96f; font-weight: 700; }
+    button.login { background: none; border: 0; color: #fff; cursor: pointer; font-family: inherit; }
+
+    /* Footer (grid) */
+    .fgrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; }
+    .footer h4 { margin: 0 0 10px; font-size: 13px; }
+    .footer a { display: block; margin: 6px 0; color: #cfe3f7; }
+    @media (max-width: 600px) {
+      .fgrid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Menú desplegable de Videos */
+    .dd { position: relative; display: inline-block; }
+    .dd .menu { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); width: 270px; background: #fff; border-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,.25); padding: 6px; z-index: 20; text-align: left; }
+    .dd:hover .menu, .dd:focus-within .menu { display: block; }
+    .links .menu a { display: block; margin: 0; padding: 10px 12px; color: #4a5560; font-size: 12px; font-weight: 400; }
+    .links .menu a b { display: block; color: #183b61; font-size: 13px; }
+
+    /* Ticker y barra de búsqueda */
+    .ticker { background: #111; color: #fff; font-size: 11px; padding: 10px 20px; text-align: right; }
+    .ticker a { color: #1ee494; margin-left: 14px; }
+    .sbar { background: #1ee494; padding: 12px 20px; }
+    .sbar input { display: block; width: 100%; max-width: 900px; margin: 0 auto; height: 34px; border: 0; border-radius: 3px; padding: 0 12px; }
+
+    /* Contenedor y filtros */
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+    .filters { display: flex; gap: 14px; align-items: flex-end; margin: 24px 0 10px; flex-wrap: wrap; }
+    .filters label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+    .filters select { height: 30px; border: 1px solid #bbb; border-radius: 3px; padding: 0 8px; }
+    .filters .join { height: 34px; line-height: 34px; padding: 0 16px; }
+
+    /* Paginador */
+    .pager { display: flex; gap: 12px; justify-content: center; margin: 16px 0 24px; font-size: 13px; }
+    .pager a { color: #13a96f; }
+    .pager .cur { border: 1px solid #13a96f; padding: 2px 8px; }
+
+    /* Tarjetas (segunda definición, sobrescribe la anterior) */
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+    .em-card { background: #fff; border: 1px solid #ddd; }
+    .em-card img, .ph { width: 100%; height: 150px; object-fit: cover; }
+    .ph { background: linear-gradient(135deg, #183b61, #13a96f); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+    .em-card h3 { font-size: 13px; font-weight: 600; margin: 16px 14px 8px; }
+    .em-card p { font-size: 11px; color: #7a8794; margin: 0 14px 12px; }
+    .by { display: flex; justify-content: space-between; padding: 8px 14px; border-top: 1px solid #eee; font-size: 11px; }
+    .by span { color: #13a96f; }
+
+    /* Badges */
+    .em-badge { font-style: normal; border: 1px solid; padding: 1px 6px; font-size: 10px; }
+    .b-difficult { color: #c0392b; }
+    .b-expert { color: #111; }
+    .b-moderate { color: #e67e22; }
+    .b-easy { color: #13a96f; }
+    .b-news, .b-podcast { color: #183b61; }
+    .b-review, .b-tutorial { color: #1f5fbf; }
+
+    /* Título de página y tarjetas de plataformas */
+    h1.pt { font-weight: 400; font-size: 24px; border-bottom: 1px solid #333; padding-bottom: 8px; margin: 30px 0 24px; }
+    .pgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 40px; }
+    .pcard { background: #fff; padding: 24px; }
+    .pcard .ph { width: 56px; height: 56px; font-size: 24px; }
+    .pcard h3 { font-size: 13px; margin: 12px 0 6px; }
+    .pcard p { font-size: 12px; color: #444; margin: 0 0 16px; min-height: 68px; }
+    .pcard a { display: block; text-align: center; border: 1px solid #13a96f; color: #13a96f; border-radius: 3px; padding: 7px; font-size: 12px; }
+    .empty { text-align: center; padding: 40px; color: #666; }
+
+    @media (max-width: 900px) {
+      .pgrid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 700px) {
+      .cards, .pgrid { grid-template-columns: 1fr; }
+    }
+
+    /* ==========================================================
+       3. MODALES (LOGIN / REGISTRO)
+       ========================================================== */
+    .mo { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: none; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+    .mo.open { display: flex; }
+    .md { background: #fff; display: flex; width: 100%; max-width: 800px; max-height: 92vh; overflow: auto; border-radius: 3px; box-shadow: 0 10px 40px rgba(0,0,0,.4); }
+    .md .l { flex: 1 1 62%; padding: 26px 28px; }
+    .md .r { flex: 1 1 38%; background: #f2f2f4; padding: 26px 24px; }
+    .md h2 { font-size: 14px; font-weight: 600; margin: 0 0 16px; color: #183b61; }
+    .md label { display: block; font-size: 11px; font-weight: 700; margin: 12px 0 5px; color: #333; }
+    .md input[type=text], .md input[type=email], .md input[type=password] { width: 100%; height: 32px; border: 1px solid #ddd; background: #f6f6f6; padding: 0 10px; font-size: 12px; border-radius: 2px; }
+    .md input:focus { outline: 2px solid #18be80; background: #fff; }
+    .r2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .rad { display: flex; gap: 14px; font-size: 11px; margin: 14px 0 8px; }
+    .rad label { display: inline-flex; gap: 5px; margin: 0; font-weight: 400; }
+    .md .errorlist { list-style: none; margin: 4px 0 0; padding: 0; color: #c0392b; font-size: 11px; }
+
+    /* Captcha */
+    .cap { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 290px; height: 64px; border: 1px solid #d3d3d3; background: #f9f9f9; border-radius: 3px; padding: 0 12px; font-size: 12px; margin: 12px 0; }
+    .cap.bad { border-color: #c0392b; }
+    .cap input { width: 24px; height: 24px; margin: 0; }
+    .cap small { margin-left: auto; font-size: 8px; color: #777; text-align: center; }
+
+    /* Botones y enlaces del modal */
+    .em-btn { background: #18be80; color: #fff; border: 0; font-weight: 700; font-size: 12px; padding: 10px 20px; border-radius: 2px; cursor: pointer; }
+    .em-btn:hover { background: #13a96f; }
+    .md .lnk { font-size: 11px; margin-top: 16px; color: #555; }
+    .md .lnk a { color: #13a96f; font-weight: 700; margin-left: 2px; }
+    .soc { display: block; width: 100%; height: 34px; border: 0; color: #fff; font-weight: 700; font-size: 12px; margin-bottom: 14px; cursor: pointer; border-radius: 2px; }
+    .soc.g { background: #d94836; }
+    .soc.gh { background: #4078c0; }
+    .socnote { font-size: 11px; color: #777; display: none; }
+
+    @media (max-width: 640px) {
+      .md { flex-direction: column; }
+    }
+
+    /* ==========================================================
+       4. HOME: SECCIONES, FAQ, SOPORTE
+       ========================================================== */
+    .hsec { padding: 30px 0; border-top: 1px solid #eee; }
+    .hsec h2 { font-weight: 300; font-size: 26px; margin: 0 0 16px; color: #173e63; }
+    .plist { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+    .plist div { text-align: center; font-size: 12px; }
+    .plist .ph { width: 56px; height: 56px; margin: 0 auto 6px; border-radius: 50%; font-size: 22px; }
+    details { border: 1px solid #ddd; padding: 12px 16px; margin-bottom: 8px; font-size: 13px; }
+    summary { cursor: pointer; font-weight: 700; }
+    details p { color: #555; line-height: 1.5; margin: 10px 0 0; }
+    .sup { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .sup input, .sup textarea { width: 100%; border: 1px solid #ccc; border-radius: 3px; padding: 8px; font: inherit; font-size: 12px; margin-bottom: 8px; }
+    .cartbox { border: 1px dashed #aaa; padding: 30px; text-align: center; color: #555; }
+    .cartbox a { display: inline-block; margin-top: 12px; }
+
+    @media (max-width: 700px) {
+      .plist { grid-template-columns: repeat(3, 1fr); }
+      .sup { grid-template-columns: 1fr; }
+    }
+
+    /* ==========================================================
+       5. CARRITO Y DETALLES
+       ========================================================== */
+    .cart { position: relative; }
+    .bdg { position: absolute; top: 0; right: 0; background: #18be80; color: #fff; font-size: 8px; border-radius: 50%; min-width: 12px; height: 12px; line-height: 12px; text-align: center; }
+    #cartpanel { display: none; position: fixed; top: 80px; right: max(12px, calc((100% - 830px) / 2)); width: 300px; background: #fff; box-shadow: 0 4px 18px rgba(0,0,0,.3); z-index: 90; color: #333; font-size: 12px; }
+    #cartpanel.open { display: block; }
+    .ch { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #f2f2f2; border-bottom: 1px solid #ddd; }
+    .ch button { background: none; border: 0; font-size: 18px; color: #999; cursor: pointer; }
+    .cb { height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #777; gap: 8px; text-align: center; }
+    .cb a { color: #13a96f; font-weight: 700; }
+    .cs { display: flex; justify-content: space-between; padding: 12px 14px; background: #f2f2f2; border-top: 1px solid #ddd; }
+    .cf { padding: 0 14px 14px; background: #f2f2f2; }
+
+    /* Etiquetas sobre imágenes y placeholders */
+    .tg { position: absolute; right: 8px; bottom: 6px; font-style: normal; font-size: 11px; color: #fff; text-shadow: 0 1px 2px #000; }
+    .tg b { color: #1ee494; }
+    .em-card { position: relative; }
+    .ph { position: relative; }
+    .ph span { filter: drop-shadow(0 2px 3px rgba(0,0,0,.4)); }
+    .ph.sq { border-radius: 10px; font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+  </style>
+</head>
+
+<body>
+<div id="app">
+
+  <!-- Barra superior -->
+  <div class="top">We typically ship your component the same day*</div>
+
+  <!-- Navegación principal -->
+  <nav class="em-nav">
+    <a class="logo" href="{% url 'home' %}">electro <span>{maker}</span></a>
+
+    <div class="links">
+      <a href="{% url 'home' %}">Shop</a>
+      <a href="{% url 'platforms' %}">Platforms</a>
+      <a href="{% url 'projects' %}">Project Hub</a>
+
+      <div class="dd">
+        <a href="{% url 'videos' %}">Videos</a>
+        <div class="menu">
+          <a href="{% url 'videos_tag' 'potw' %}">
+            <b>Product of the Week</b>Discover something cool for your next hardware project.
+          </a>
+          <a href="{% url 'videos_tag' 'educator' %}">
+            <b>Electromaker Educator</b>Allow our very own in-house electronics engineer extraordinaire teach you something new.
+          </a>
+          <a href="https://www.youtube.com/channel/UCiMO2NHYWNiVTzyGsPYn4DA" target="_blank" rel="noopener">
+            <b>The Electromaker Show</b>Watch our weekly YouTube show hosted by Ian Buckley.
+          </a>
+          <a href="{% url 'videos_tag' 'podcast' %}">
+            <b>The Electromaker Podcast</b>Listen to the Electromaker Show on the go!
+          </a>
+        </div>
+      </div>
+
+      <a href="{% url 'blog' %}">Blog</a>
+    </div>
+
+    {% if user.is_authenticated %}
+      <span class="login">Hi, {{ user.username }}</span>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="login" type="submit" style="margin-left:0">Logout</button>
+      </form>
+    {% else %}
+      <a class="login" href="{% url 'login' %}" data-open="login">Login</a>
+      <a class="join" href="{% url 'register' %}" data-open="register">Join us</a>
+    {% endif %}
+
+    <a class="cart" href="#cart" data-cart aria-label="Shopping cart">🛒<sup class="bdg">0</sup></a>
+  </nav>
+
+  <!-- Subnavegación, buscador y marcas -->
+  <div class="subnav">
+    <div class="subtop">
+      <div class="sublinks">
+        <a href="#categories">Categories</a>
+        <a href="#brands">Brands</a>
+        <a href="#faqs">FAQs</a>
+        <a href="#support">Help &amp; Support</a>
+      </div>
+      <div class="searchwrap">
+        <input class="search" placeholder="Search for a product or part number" aria-label="Search">
+      </div>
+    </div>
+
+    <div class="brands" id="brands">
+      <div class="brand"><img src="{% static 'images/arduino-shop-logo.png' %}" alt="Arduino"></div>
+      <div class="brand"><img src="{% static 'images/adafruit-shop-logo.png' %}" alt="Adafruit"></div>
+      <div class="brand"><img src="{% static 'images/m5stack-shop-logo.svg' %}" alt="M5Stack"></div>
+      <div class="brand"><img src="{% static 'images/seeed-studio-shop-logo.png' %}" alt="Seeed Studio"></div>
+      <div class="brand"><img src="{% static 'images/raspberry-pi-shop-logo.png' %}" alt="Raspberry Pi"></div>
+      <div class="brand"><img src="{% static 'images/pimoroni-shop-logo.png' %}" alt="Pimoroni"></div>
+      <div class="brand"><img src="{% static 'images/dfrobot-shop-logo.png' %}" alt="DFRobot"></div>
+      <div class="brand"><img src="{% static 'images/sparkfun-shop-logo.png' %}" alt="SparkFun Electronics"></div>
+    </div>
+  </div>
+
+  <!-- Contenido de cada página -->
+  <main class="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="fgrid">
+      <div>
+        <h4>Electromaker</h4>
+        <a href="#">Our Mission</a>
+        <a href="{% url 'blog' %}">Blog</a>
+        <a href="{% url 'platforms' %}">Platforms</a>
+        <a href="{% url 'projects' %}">Project Hub</a>
+        <a href="{% url 'videos' %}">Video</a>
+        <a href="#">Contests</a>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <a href="{% url 'login' %}" data-open="login">Login</a>
+        <a href="{% url 'register' %}" data-open="register">Sign up</a>
+        <a href="#categories">All Categories</a>
+        <a href="#brands">All Brands</a>
+        <a href="#faqs">FAQs</a>
+      </div>
+      <div>
+        <h4>Trending Brands</h4>
+        <a href="#brands">Adafruit</a>
+        <a href="#brands">M5Stack</a>
+        <a href="#brands">SparkFun Electronics</a>
+        <a href="#brands">Seeed Studio</a>
+        <a href="#brands">DFRobot</a>
+        <a href="#brands">Raspberry Pi</a>
+        <a href="#brands">Arduino</a>
+      </div>
+      <div>
+        <h4>Popular Categories</h4>
+        <a href="#categories">Adafruit Accessories</a>
+        <a href="#categories">Sparkfun Accessories</a>
+        <a href="#categories">Raspberry Pi Accessories</a>
+        <a href="#categories">DFRobot Accessories</a>
+        <a href="#categories">Single Board Computers</a>
+        <a href="#categories">Embedded Box Computers</a>
+      </div>
+      <div>
+        <h4>Legal information</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#support">Contact Form</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- Panel del carrito -->
+<aside id="cartpanel">
+  <div class="ch">
+    <span><b>My cart</b>, <span id="cn">0</span> item(s)</span>
+    <button type="button" data-cart aria-label="Close">✕</button>
+  </div>
+  <div class="cb">
+    Your cart is empty.<br>
+    <a href="{% url 'home' %}#categories">Continue shopping</a>
+  </div>
+  <div class="cs">
+    <span>Sub-total</span>
+    <b>$0.00</b>
+  </div>
+  <div class="cf">
+    <button class="em-btn" type="button" disabled style="opacity:.6;cursor:not-allowed">Checkout</button>
+  </div>
+</aside>
+
+<script src="{% static 'core/js/bootstrap.bundle.min.js' %}"></script>
+<script>
+  (function () {
+    var p = document.getElementById('cartpanel');
+
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('[data-cart]')) {
+        e.preventDefault();
+        p.classList.toggle('open');
+        return;
+      }
+      if (!e.target.closest('#cartpanel')) p.classList.remove('open');
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') p.classList.remove('open');
+    });
+  })();
+</script>
+
+{% include "auth/modals.html" %}
+</body>
+</html>

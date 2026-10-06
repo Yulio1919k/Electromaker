@@ -1,0 +1,24 @@
+{% if not user.is_authenticated %}
+<div class="mo{% if open_modal == 'login' %} open{% endif %}" id="m-login"><div class="md"><div class="l"><h2>Log in to your account</h2>
+<form method="post" action="{% url 'login' %}" novalidate>{% csrf_token %}{{ login_form.non_field_errors }}
+<label>Email address</label>{{ login_form.username }}{{ login_form.username.errors }}
+<label>Password</label>{{ login_form.password }}{{ login_form.password.errors }}
+<p style="margin-top:18px"><button class="em-btn" type="submit">Login</button> <a href="#" class="lnk" style="margin-left:12px;color:#13a96f;font-weight:700;text-decoration:underline">Forgotten password?</a></p>
+<p class="lnk">Not a member yet? <a href="{% url 'register' %}" data-open="register">Create an account</a></p></form></div>
+<div class="r"><h2>Sign in with social media</h2><button class="soc g" type="button">Google</button><button class="soc gh" type="button">GitHub</button><div class="socnote">Social sign-in is not enabled in this demo.</div></div></div></div>
+<div class="mo{% if open_modal == 'register' %} open{% endif %}" id="m-register"><div class="md"><div class="l"><h2>Join the Electromaker community today!</h2>
+<form method="post" action="{% url 'register' %}" id="regform" novalidate>{% csrf_token %}{{ register_form.non_field_errors }}
+<label>Username</label>{{ register_form.username }}{{ register_form.username.errors }}
+<label>Email address</label>{{ register_form.email }}{{ register_form.email.errors }}
+<div class="r2"><div><label>Password</label>{{ register_form.password1 }}{{ register_form.password1.errors }}</div><div><label>Confirm Password</label>{{ register_form.password2 }}{{ register_form.password2.errors }}</div></div>
+<label>Would you like to be signed up to the Electromaker newsletter?</label><div class="rad">{% for r in register_form.newsletter %}<label>{{ r.choice_label }} {{ r.tag }}</label>{% endfor %}</div>
+<div class="cap" id="cap"><input type="checkbox" id="capchk"><span>I'm not a robot</span><small>reCAPTCHA<br>Privacy - Terms</small></div>
+<button class="em-btn" type="submit">Create Your Account</button>
+<p class="lnk">Already a member? <a href="{% url 'login' %}" data-open="login">Sign in</a></p></form></div>
+<div class="r"><h2>Sign in with social media</h2><button class="soc g" type="button">Google</button><button class="soc gh" type="button">GitHub</button><div class="socnote">Social sign-in is not enabled in this demo.</div></div></div></div>
+<script>(function(){function show(n){document.querySelectorAll('.mo').forEach(function(m){m.classList.toggle('open',m.id==='m-'+n)})}
+document.addEventListener('click',function(e){var t=e.target.closest('[data-open]');if(t){e.preventDefault();show(t.dataset.open);return}
+if(e.target.classList.contains('mo'))show('');var s=e.target.closest('.soc');if(s){s.parentNode.querySelector('.socnote').style.display='block'}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')show('')});
+var f=document.getElementById('regform');if(f)f.addEventListener('submit',function(e){var c=document.getElementById('capchk');if(!c.checked){e.preventDefault();document.getElementById('cap').classList.add('bad')}});})();</script>
+{% endif %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load ui %}
+
+{% block title %}Featured Platforms - Electromaker.io{% endblock %}
+
+{% block content %}
+<div class="wrap" style="max-width:1000px">
+  <h1 class="pt">Featured Platforms</h1>
+
+  <div class="pgrid">
+    {% for p in platforms %}
+    <div class="pcard">
+      <img
+        src="{% if p.image_url %}{{ p.image_url }}{% else %}{% url 'thumb' 'platform' p.pk %}{% endif %}"
+        alt="{{ p.name }}"
+        width="56"
+        height="56"
+        style="border-radius:10px">
+
+      <h3>{{ p.name }}</h3>
+      <p>{{ p.description|truncatechars:105 }}</p>
+      <a href="{% url 'projects' %}?platform={{ p.name|urlencode }}">View platform</a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
